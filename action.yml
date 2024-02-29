@@ -1,0 +1,30 @@
+name: "Setup Developer Jule Compiler"
+description: "Setup Developer Jule Compiler for the Official CI actions."
+author: "mertcandav"
+branding:
+  icon: code
+  color: gray-dark
+runs:
+  using: "composite"
+  steps:
+    - name: Validating Operating System
+      shell: bash
+      run: |
+        if [[ "$RUNNER_OS" == "Windows" ]]; then
+          echo "The action doesn't support building on Windows yet."
+          exit 1
+        fi
+    - name: Get IR
+      shell: bash
+      run: |
+        os=$( [[ "$OSTYPE" == "darwin"* ]] && echo darwin || echo linux)
+        curl -o ir.cpp https://raw.githubusercontent.com/julelang/julec-ir/main/src/${os}-amd64.cpp
+    - name: Build Jule Compiler
+      shell: bash
+      run: |
+        mkdir bin
+        clang++ -O0 --std=c++17 -Wno-everything -o bin/julec ir.cpp
+    - name: Add Compiler to the PATH
+      shell: bash
+      run: |
+        echo "export PATH=\$PATH:./bin/" >> $GITHUB_PATH
