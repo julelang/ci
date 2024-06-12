@@ -7,23 +7,28 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: Validating Operating System
-      shell: bash
-      run: |
-        if [[ "$RUNNER_OS" == "Windows" ]]; then
-          echo "The action doesn't support building on Windows yet."
-          exit 1
-        fi
     - name: Get IR
       shell: bash
       run: |
-        os=$( [[ "$OSTYPE" == "darwin"* ]] && echo darwin || echo linux)
-        curl -o ir.cpp https://raw.githubusercontent.com/julelang/julec-ir/main/src/${os}-amd64.cpp
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+          curl -o ir.cpp https://raw.githubusercontent.com/julelang/julec-ir/main/src/darwin-amd64.cpp
+        elif [[ "$RUNNER_OS" == "Windows" ]]; then
+          curl -o ir.cpp https://raw.githubusercontent.com/julelang/julec-ir/main/src/windows-amd64.cpp
+        elif [[ "$RUNNER_OS" == "Linux" ]]; then
+          curl -o ir.cpp https://raw.githubusercontent.com/julelang/julec-ir/main/src/linux-amd64.cpp
+        else
+          echo "Unsupported operating system."
+          exit 1
+        fi
     - name: Build Jule Compiler
       shell: bash
       run: |
         mkdir bin
-        clang++ -O0 --std=c++17 -Wno-everything -o bin/julec ir.cpp
+        if [[ "$RUNNER_OS" == "Windows" ]]; then
+          g++ "-Wa,-mbig-obj" -O0 --std=c++17 -w -o bin/julec ir.cpp
+        else
+          clang++ -O0 --std=c++17 -Wno-everything -o bin/julec ir.cpp
+        fi
     - name: Add Compiler to the PATH
       shell: bash
       run: |
