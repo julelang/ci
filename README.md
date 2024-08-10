@@ -10,7 +10,7 @@ Please use the generel-driven [Panquesito7/setup-jule](https://github.com/Panque
 > This CI adds the Jule compiler to the PATH by default.
 > However, there is no guarantee that it will work as expected.
 > You may encounter problems on some platforms.
-> That's why `bin\julec` is recommended to use the Jule compiler.
+> That's why `bin\julec` is the recommended way to use the Jule compiler.
 
 ## License
 
