@@ -25,7 +25,7 @@ runs:
       run: |
         mkdir bin
         if [[ "$RUNNER_OS" == "Windows" ]]; then
-          clang++ -O0 --std=c++17 -Wno-everything -o bin/julec.exe ir.cpp -lshell32
+          clang++ -O0 --std=c++17 -Wno-everything -o bin/julec.exe ir.cpp -lws2_32 -lshell32
         else
           clang++ -O0 --std=c++17 -Wno-everything -o bin/julec ir.cpp
         fi
