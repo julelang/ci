@@ -7,12 +7,6 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: Set up Clang
-      if: runner.os == 'Windows'
-      uses: egor-tensin/setup-clang@v1
-      with:
-        version: 19.1.7
-        platform: x64
     - name: Get IR
       shell: bash
       run: |
